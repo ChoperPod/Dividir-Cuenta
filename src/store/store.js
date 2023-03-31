@@ -19,7 +19,7 @@ export function calcularPartes() {
     const total = store.params.total;
     const propina = store.params.propina;
     const personas = store.params.personas
-    const totalXPersona = getGrandTotal() / personas;
+    const totalXPersona = (total * (propina / 100 + 1)) / personas;
 
     store.params.restante = getGrandTotal();
 
@@ -36,8 +36,9 @@ export function calcularPartes() {
 
 function calcularRestante() {
     const faltanXPagar = store.personasArray.filter(item => !item.pagado);
-    const restante = faltanXPagar.reduce((acumulador, item) => (acumulador += totalXPersona), 0);
-    store.params.restante = restante;
+    store.params.restante = faltanXPagar.reduce((acumulador, item) => {
+        return acumulador += item.totalXPersona;
+    }, 0);
 }
 
 export function pagar(id, pago) {
